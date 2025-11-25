@@ -6,6 +6,7 @@ class SessionEvent(BaseModel):
     event: Optional[Union[str, dict]] = None
     b64: Optional[str] = None
     ts: Optional[int] = None
+    duration: Optional[int] = None
 
     class Config:
         extra = "ignore"

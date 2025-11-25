@@ -4,7 +4,8 @@ import json
 import logging
 from fastapi import WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import FileResponse
-from ..services.session_service import get_or_create_session, log_flag
+from ..models.session import get_or_create_session
+from ..services.session_service import log_flag
 from ..services.report_service import generate_report
 
 logger = logging.getLogger(__name__)

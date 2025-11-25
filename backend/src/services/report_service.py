@@ -2,19 +2,19 @@
 
 import os
 import logging
-import time
 from datetime import datetime, timedelta
 from fpdf import FPDF
 from typing import Optional
 from ..models.session import get_session
 from ..config import REPORTS_DIR
+from .session_service import save_json_report, get_formatted_time
 
 logger = logging.getLogger(__name__)
 
 
 def generate_report(session_id: str) -> Optional[str]:
     """
-    Generate a PDF report for a session.
+    Generate a PDF report for a session with structured activity logs.
     
     Args:
         session_id: The session ID to generate a report for
@@ -27,44 +27,52 @@ def generate_report(session_id: str) -> Optional[str]:
         logger.warning(f"Session not found: {session_id}")
         return None
     
-    flags = session.flags
-    logs = session.logs
-    # Ensure start_time is a datetime object or convert if needed, 
-    # but Session class initializes it as datetime.now()
-    start_time = session.created_at
-    end_time = datetime.now()
+    logs = session.structured_logs
+    total_flags = sum(log.get("count", 1) for log in logs)
     
-    duration_sec = int((end_time - start_time).total_seconds())
+    # Calculate total session duration
+    start_dt = datetime.strptime(session.start_time, "%Y-%m-%d %H:%M:%S")
+    end_time = datetime.now()
+    duration_sec = int((end_time - start_dt).total_seconds())
     duration_str = str(timedelta(seconds=duration_sec))
 
     # Create PDF
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    pdf.cell(200, 10, txt=f"Proctoring Report: {session_id}", ln=True, align='C')
-    pdf.ln(10)
-    
-    pdf.set_font("Arial", size=10)
-    pdf.cell(200, 10, txt=f"Duration: {duration_str}", ln=True)
-    pdf.ln(5)
-
-    pdf.set_font("Arial", size=10)
-    if not flags:
-        pdf.cell(200, 10, txt="No suspicious activity detected.", ln=True)
-    else:
-        for flag in flags:
-            pdf.cell(200, 10, txt=flag, ln=True)
+    pdf.set_font("Arial", "B", 16)
+    pdf.cell(0, 10, txt="AI Proctoring Session Report", ln=True, align='C')
     pdf.ln(8)
-    pdf.cell(0, 8, "Session Logs:", ln=True)
-    pdf.ln(6)
+
+    pdf.set_font("Arial", size=12)
+    pdf.cell(0, 8, txt=f"Session ID: {session_id}", ln=True)
+    pdf.cell(0, 8, txt=f"Duration: {duration_str}", ln=True)
+    pdf.cell(0, 8, txt=f"Total Events Detected: {total_flags}", ln=True)
+    pdf.ln(8)
     
-    pdf.set_font("Arial", size=11)
+    # Table Header
+    pdf.set_font("Arial", "B", 11)
+    pdf.cell(40, 8, "From", 1)
+    pdf.cell(40, 8, "To", 1)
+    pdf.cell(25, 8, "Duration", 1)
+    pdf.cell(85, 8, "Activity", 1)
+    pdf.ln()
+
+    # Table Rows
+    pdf.set_font("Arial", size=10)
     for log in logs:
-        # Multi_cell to avoid encoding issues for PDF; FPDF uses latin-1 internally,
-        # so avoid characters that can't be encoded; replace unsupported characters.
-        safe_log = log.encode("latin-1", "replace").decode("latin-1")
-        pdf.multi_cell(0, 7, safe_log)
+        start = get_formatted_time(log["start_time"])
+        end = get_formatted_time(log["end_time"])
+        duration = f"{log['duration_sec']}s"
+        activity = log["activity"]
+        
+        # Encode to latin-1 to handle PDF encoding
+        safe_activity = activity.encode("latin-1", "replace").decode("latin-1")
+        
+        pdf.cell(40, 8, start, 1)
+        pdf.cell(40, 8, end, 1)
+        pdf.cell(25, 8, duration, 1)
+        pdf.cell(85, 8, safe_activity, 1)
+        pdf.ln()
     
     # Ensure reports directory exists
     os.makedirs(REPORTS_DIR, exist_ok=True)
@@ -72,9 +80,8 @@ def generate_report(session_id: str) -> Optional[str]:
     pdf.output(report_path)
     
     logger.info(f"[REPORT GENERATED] {report_path}")
-    return report_path
-
-    #soc2 gdpr compliant. 
-    #can we use yolov8, aws system
     
-
+    # Also ensure JSON is saved one last time
+    save_json_report(session_id)
+    
+    return report_path

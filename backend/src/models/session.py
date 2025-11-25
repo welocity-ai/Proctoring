@@ -11,7 +11,9 @@ class Session:
         self.session_id = session_id
         self.flags: List[str] = []
         self.logs: List[str] = []
+        self.structured_logs: List[Dict[str, Any]] = []
         self.created_at = datetime.now()
+        self.start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     def add_flag(self, event: str) -> None:
         """Add a flag event to the session."""
@@ -25,8 +27,10 @@ class Session:
             "session_id": self.session_id,
             "flags": self.flags,
             "logs": self.logs,
+            "structured_logs": self.structured_logs,
             "total_flags": len(self.flags),
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
+            "start_time": self.start_time
         }
 
 
