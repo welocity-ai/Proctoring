@@ -11,9 +11,7 @@ ffmpeg-python
 tqdm
 jinja2
 python-dotenv
-fpdf
 fpdf2
-pydub
 moviepy
 ultralytics
 msgpack
