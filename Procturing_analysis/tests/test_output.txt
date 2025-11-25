@@ -1,0 +1,91 @@
+[INFO] Starting analysis for dummy_video.mp4
+[INFO] Session ID: efb165d0
+[INFO] Output folder: tests/out
+[INFO] Submitting Face + Gaze Analysis (worker)...
+[INFO] Submitting Gadget Detection (worker)...
+[INFO] [TIMER] Audio Extraction took: 0.0001 seconds
+[INFO] Submitting Voice Diarization (worker)...
+[INFO] Waiting for workers to finish...
+[CRITICAL] Pipeline Failed:
+[CRITICAL] concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/queues.py", line 264, in _feed
+    obj = _ForkingPickler.dumps(obj)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+_pickle.PicklingError: Can't pickle <class 'unittest.mock.MagicMock'>: it's not the same object as unittest.mock.MagicMock
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/Documents/Procapp/Procturing_analysis/vimeo_proctor_report.py", line 192, in main
+    res = fut.result()
+          ^^^^^^^^^^^^
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/queues.py", line 264, in _feed
+    obj = _ForkingPickler.dumps(obj)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+_pickle.PicklingError: Can't pickle <class 'unittest.mock.MagicMock'>: it's not the same object as unittest.mock.MagicMock
+
+[INFO] Cleaned up tests/out/tmp
+[INFO] [TIMER] TOTAL Pipeline Runtime took: 0.0171 seconds
+[INFO] Proctoring Analysis Complete! Report saved in: tests/out
+F
+======================================================================
+FAIL: test_parallel_execution (__main__.TestParallelExecution.test_parallel_execution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/roopakkrishna/Documents/Procapp/Procturing_analysis/tests/test_parallel_execution.py", line 65, in test_parallel_execution
+    self.assertTrue(mock_face.called)
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.021s
+
+FAILED (failures=1)
+Total Test Duration: 0.02s
+WARNING ⚠️ Error decoding JSON from /Users/roopakkrishna/Library/Application Support/Ultralytics/persistent_cache.json. Starting with an empty dictionary.
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py", line 264, in main
+    cache[rtype].remove(name)
+KeyError: '/mp-v4yop8ik'
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py", line 264, in main
+    cache[rtype].remove(name)
+KeyError: '/mp-cflg37im'
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py", line 264, in main
+    cache[rtype].remove(name)
+KeyError: '/mp-sdoum5tr'
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py", line 264, in main
+    cache[rtype].remove(name)
+KeyError: '/mp-w0s5x_su'
+Traceback (most recent call last):
+  File "/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py", line 264, in main
+    cache[rtype].remove(name)
+KeyError: '/mp-irnyi_15'
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:292: UserWarning: resource_tracker: '/mp-irnyi_15': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:292: UserWarning: resource_tracker: '/mp-v4yop8ik': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:292: UserWarning: resource_tracker: '/mp-cflg37im': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:292: UserWarning: resource_tracker: '/mp-sdoum5tr': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))
+/Users/roopakkrishna/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:292: UserWarning: resource_tracker: '/mp-w0s5x_su': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))

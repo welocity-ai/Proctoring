@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg-app text-text-primary font-sans min-h-screen flex flex-col items-center justify-center overflow-x-hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold text-text-primary leading-tight;
+  }
+
+  p {
+    @apply text-text-secondary;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-base transition-all duration-200 gap-2 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-app;
+  }
+
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500;
+  }
+
+  .btn-outline-primary {
+    @apply bg-transparent border-2 border-blue-500 text-blue-500 hover:bg-blue-500/10 focus:ring-blue-500;
+  }
+
+  .btn-danger {
+    @apply bg-red-500 text-white hover:bg-red-600 focus:ring-red-500;
+  }
+
+  .btn-success {
+    @apply bg-green-500 text-white hover:bg-green-600 focus:ring-green-500;
+  }
+
+  .card {
+    @apply bg-bg-card/70 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-xl;
+  }
+
+  .glass-panel {
+    @apply bg-bg-surface/50 backdrop-blur-sm border border-white/5;
+  }
+
+  .fade-in {
+    @apply animate-[fadeIn_0.5s_ease-in-out_forwards] opacity-0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

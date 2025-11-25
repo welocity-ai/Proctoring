@@ -1,0 +1,47 @@
+"""Session data models."""
+
+from typing import List, Dict, Any
+from datetime import datetime
+
+
+class Session:
+    """Represents a proctoring session."""
+    
+    def __init__(self, session_id: str):
+        self.session_id = session_id
+        self.flags: List[str] = []
+        self.logs: List[str] = []
+        self.created_at = datetime.now()
+    
+    def add_flag(self, event: str) -> None:
+        """Add a flag event to the session."""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.flags.append(event)
+        self.logs.append(f"[{timestamp}] {event}")
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert session to dictionary."""
+        return {
+            "session_id": self.session_id,
+            "flags": self.flags,
+            "logs": self.logs,
+            "total_flags": len(self.flags),
+            "created_at": self.created_at.isoformat()
+        }
+
+
+# Global session storage (in-memory)
+SESSIONS: Dict[str, Session] = {}
+
+# backend/src/models/session.py
+
+# Simple in-memory session storage for now
+SESSIONS = {}
+
+def get_session(session_id: str):
+    """Return the session dict for a given session_id, create one if not exists."""
+    if session_id not in SESSIONS:
+        SESSIONS[session_id] = {"flags": [], "logs": []}
+    return SESSIONS[session_id]
+
+

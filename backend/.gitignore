@@ -1,0 +1,31 @@
+.env/
+.venv/
+.__pycache__/
+*.pyc
+.env
+venv/
+.venv/
+uv.lock
+poetry.lock
+Pipfile.lock
+pyrightconfig.json
+reports/
+*.pdf
+*.json
+
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# OS junk
+.DS_Store
