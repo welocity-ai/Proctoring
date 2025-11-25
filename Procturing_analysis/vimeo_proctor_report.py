@@ -35,7 +35,7 @@ logging.getLogger("torch").setLevel(logging.ERROR)
 
 from src import config
 from src.face_and_gaze_analysis import analyze_face_and_gaze
-from src.voice_diarization import run_diarization_and_extract_snippets
+from src.voice_diarization import run_voice_analysis_with_audio_extraction
 from src.object_detection import run_object_detection
 #from src.object_detection_rf import run_object_detection
 from src.report_builder import build_pdf_report
@@ -57,24 +57,7 @@ def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
-def extract_audio(video_path: str, outdir: str) -> str:
-    ensure_dir(outdir)
-    audio_path = os.path.join(outdir, "audio.wav")
-    logging.info("Extracting audio from video...")
-    cmd = [
-        "ffmpeg", "-y", "-i", video_path, "-vn",
-        "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", audio_path
-    ]
-    try:
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception as e:
-        raise RuntimeError("❌ Audio extraction failed.") from e
 
-    if not os.path.exists(audio_path):
-        raise RuntimeError("❌ Audio extraction failed (no file).")
-
-    logging.info(f"Audio saved at: {audio_path}")
-    return audio_path
 
 
 # ---------------- MAIN ---------------- #
@@ -153,28 +136,17 @@ def main() -> None:
             args.object_sample_ms
         )
 
-        # -----------------------------------------------------
-        # EXTRACT AUDIO WHILE WORKERS RUN
-        # -----------------------------------------------------
-        t0_audio = start_timer()
-        audio_path = extract_audio(args.video, tmp_dir)
-        end_timer(t0_audio, "Audio Extraction")
-
-        # -----------------------------------------------------
-        # SUBMIT DIARIZATION TO WORKER (Parallel)
-        # -----------------------------------------------------
-        t0_voice = start_timer()
+        # SUBMIT DIARIZATION TO WORKER (Parallel) - audio extraction inside worker
         logging.info("Submitting Voice Diarization (worker)...")
+        t0_voice = start_timer()
         voice_future = executor.submit(
-            run_diarization_and_extract_snippets,
-            audio_path,
+            run_voice_analysis_with_audio_extraction,
+            args.video,          # video path (audio will be extracted inside worker)
+            tmp_dir,
             args.outdir,
             hf_token=args.hf_token
         )
 
-        # -----------------------------------------------------
-        # WAIT FOR PARALLEL PROCESSES
-        # -----------------------------------------------------
         # -----------------------------------------------------
         # WAIT FOR PARALLEL PROCESSES
         # -----------------------------------------------------

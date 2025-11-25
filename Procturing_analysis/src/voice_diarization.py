@@ -111,6 +111,89 @@ def extract_audio_segment(
 
 
 # -------------------------------------------------------------
+# Audio extraction helper for worker
+# -------------------------------------------------------------
+def extract_audio_internal(video_path: str, tmp_dir: str) -> str:
+    """
+    Extract audio from video file (internal version for voice worker).
+    This runs inside the voice worker for parallel execution.
+    
+    Args:
+        video_path: Path to input video file
+        tmp_dir: Temporary directory to save audio
+    
+    Returns:
+        Path to extracted audio WAV file
+    """
+    import subprocess
+    
+    os.makedirs(tmp_dir, exist_ok=True)
+    audio_path = os.path.join(tmp_dir, "audio.wav")
+    
+    print("[VOICE WORKER] Extracting audio from video...")
+    cmd = [
+        "ffmpeg", "-y", "-i", video_path, "-vn",
+        "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", audio_path
+    ]
+    
+    try:
+        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as e:
+        raise RuntimeError(f"❌ Audio extraction failed in voice worker: {e}")
+    
+    if not os.path.exists(audio_path):
+        raise RuntimeError("❌ Audio extraction failed (no file created).")
+    
+    print(f"[VOICE WORKER] Audio extracted to: {audio_path}")
+    return audio_path
+
+
+# -------------------------------------------------------------
+# Complete voice analysis with audio extraction (for parallel worker)
+# -------------------------------------------------------------
+def run_voice_analysis_with_audio_extraction(
+    video_path: str,
+    tmp_dir: str,
+    outdir: str,
+    hf_token: str = None,
+    min_flag_duration: float = 2.0,
+    min_noise_duration: float = 0.50
+):
+    """
+    Complete voice analysis pipeline that extracts audio internally.
+    This allows the voice worker to start immediately in parallel with
+    face and object detection workers.
+    
+    Pipeline:
+    1. Extract audio from video (inside worker)
+    2. Run speaker diarization
+    3. Extract proof audio snippets
+    
+    Args:
+        video_path: Path to input video file
+        tmp_dir: Temporary directory for audio extraction
+        outdir: Output directory for results and proofs
+        hf_token: HuggingFace authentication token
+        min_flag_duration: Minimum duration to flag a suspicious segment
+        min_noise_duration: Minimum duration to consider valid (filter noise)
+    
+    Returns:
+        Tuple of (logs, total_flags) same as run_diarization_and_extract_snippets
+    """
+    # Step 1: Extract audio (happens inside this worker)
+    audio_path = extract_audio_internal(video_path, tmp_dir)
+    
+    # Step 2: Run diarization and extract snippets (existing function)
+    return run_diarization_and_extract_snippets(
+        audio_path,
+        outdir,
+        hf_token=hf_token,
+        min_flag_duration=min_flag_duration,
+        min_noise_duration=min_noise_duration
+    )
+
+
+# -------------------------------------------------------------
 # Main diarization pipeline
 # -------------------------------------------------------------
 def run_diarization_and_extract_snippets(
