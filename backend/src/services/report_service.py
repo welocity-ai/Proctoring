@@ -2,6 +2,8 @@
 
 import os
 import logging
+import time
+from datetime import datetime, timedelta
 from fpdf import FPDF
 from typing import Optional
 from ..models.session import get_session
@@ -27,11 +29,13 @@ def generate_report(session_id: str) -> Optional[str]:
     
     flags = session.flags
     logs = session.logs
-    start_time = session.start_time
-    end_time = session.end_time or time.time()
+    # Ensure start_time is a datetime object or convert if needed, 
+    # but Session class initializes it as datetime.now()
+    start_time = session.created_at
+    end_time = datetime.now()
     
-    duration_sec = int(end_time - start_time) if start_time else 0
-    duration_str = time.strftime('%H:%M:%S', time.gmtime(duration_sec))
+    duration_sec = int((end_time - start_time).total_seconds())
+    duration_str = str(timedelta(seconds=duration_sec))
 
     # Create PDF
     pdf = FPDF()

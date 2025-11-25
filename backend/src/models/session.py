@@ -30,18 +30,18 @@ class Session:
         }
 
 
+
 # Global session storage (in-memory)
 SESSIONS: Dict[str, Session] = {}
 
-# backend/src/models/session.py
-
-# Simple in-memory session storage for now
-SESSIONS = {}
-
-def get_session(session_id: str):
-    """Return the session dict for a given session_id, create one if not exists."""
+def get_or_create_session(session_id: str) -> Session:
+    """Return the Session object for a given session_id, create one if not exists."""
     if session_id not in SESSIONS:
-        SESSIONS[session_id] = {"flags": [], "logs": []}
+        SESSIONS[session_id] = Session(session_id)
     return SESSIONS[session_id]
+
+def get_session(session_id: str) -> Any:
+    """Return the Session object for a given session_id, or None."""
+    return SESSIONS.get(session_id)
 
 

@@ -30,11 +30,13 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str) -> None:
                 
                 if event_data.type == "event":
                     event_name = event_data.event or "unknown_event"
+                    duration = event_data.duration or 0
+                    
                     # Normalize name if needed
                     if isinstance(event_name, str):
-                        log_flag(session_id, event_name)
+                        log_flag(session_id, event_name, duration)
                     else:
-                        log_flag(session_id, json.dumps(event_name))
+                        log_flag(session_id, json.dumps(event_name), duration)
                 else:
                     # Ignore other types (we aren't receiving frames/audio right now)
                     logger.debug(f"[WS] {session_id} ignored message type: {event_data.type}")
