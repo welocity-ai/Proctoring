@@ -115,9 +115,9 @@ def build_pdf_report(outdir: str, session_id: str, duration: str,
     else:
         for g in gadget_flags:
             pdf.log_row([
-                g.get("start", "-"),
-                g.get("end", "-"),
-                round(g.get("duration", 0), 2),
+                str(g.get("start", "-")).split('.')[0],
+                str(g.get("end", "-")).split('.')[0],
+                round(g.get("duration", 0)),         # remove decimal places
                 g.get("type", "-")
             ], [40, 40, 40, 70])
 

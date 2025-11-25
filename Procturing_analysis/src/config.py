@@ -2,8 +2,8 @@ import os
 
 # Default Configuration
 DEFAULT_OUT_DIR = "reports/session_test"
-OBJECT_SAMPLE_MS = 1000
-GAZE_FRAME_STEP = 2
+OBJECT_SAMPLE_MS = 1500
+GAZE_FRAME_STEP = 5
 YOLO_MODEL_PATH = "models/phone_detector.pt"
 
 # Logging Configuration

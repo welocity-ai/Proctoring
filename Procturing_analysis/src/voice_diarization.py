@@ -118,7 +118,7 @@ def run_diarization_and_extract_snippets(
     outdir: str,
     hf_token: str = None,
     min_flag_duration: float = 2.0,
-    min_noise_duration: float = 0.75  # <-- OPTIMIZATION 4: Changed default
+    min_noise_duration: float = 0.50  # <-- OPTIMIZATION 4: Changed default
 ):
     """
     Performs Pyannote speaker diarization.

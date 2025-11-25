@@ -1,12 +1,15 @@
 yt-dlp
-opencv-python
+opencv-python==4.8.1.78
 mediapipe
-numpy
+numpy<2.0
 pydub
 torch==2.5.1
 torchaudio==2.5.1
 torchvision==0.20.1
 pyannote.audio==3.1.1
+pyannote.core==5.0.0
+pyannote.database==5.1.0
+pyannote.pipeline==3.0.1
 ffmpeg-python
 tqdm
 jinja2
